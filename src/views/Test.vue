@@ -19,11 +19,16 @@
       <error-message name="email" class="invalid-feedback"></error-message>
     </div>
 
+    <button type="button" @click="sendData">emit</button>
+
     <button class="btn btn-primary" type="submit">Submit</button>
   </Form>
 </template>
 
 <script>
+import mitt from 'mitt'
+const emitter = mitt()
+
 export default {
   data () {
     return {
@@ -33,6 +38,10 @@ export default {
   methods: {
     onSubmit () {
       console.log(this.user)
+    },
+    sendData () {
+      // fire an event
+      emitter.emit('foo', { a: 'b' })
     }
   },
   created () {
@@ -43,6 +52,9 @@ export default {
     instance.get('/api/').then((response) => {
       console.log(response.data)
     })
+
+    // listen to an event
+    emitter.on('foo', e => console.log('foo: ', e))
   }
 }
 </script>
