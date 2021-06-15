@@ -8,6 +8,11 @@ import { required, email, min } from '@vee-validate/rules'
 import { localize, setLocale } from '@vee-validate/i18n'
 import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
 
+// vue-axios
+// import Vue from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
 defineRule('required', required)
 defineRule('email', email)
 defineRule('min', min)
@@ -19,8 +24,9 @@ setLocale('zh_TW')
 
 const app = createApp(App)
 app.use(router)
+app.use(VueAxios, axios)
 
-// 註冊 vee-validate 三個全域元件
+// vee-validate
 app.component('Form', Form)
 app.component('Field', Field)
 app.component('ErrorMessage', ErrorMessage)

@@ -36,7 +36,13 @@ export default {
     }
   },
   created () {
-    console.log(this)
+    const instance = this.$http.create({
+      baseURL: 'https://randomuser.me'
+    })
+
+    instance.get('/api/').then((response) => {
+      console.log(response.data)
+    })
   }
 }
 </script>
