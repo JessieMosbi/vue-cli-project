@@ -28,14 +28,14 @@
           </td>
           <td>
             <div class="btn-group btn-group-sm">
-              <button
-                type="button"
+              <router-link
+                :to="{
+                  path: `/product/${product.id}`,
+                  // query: { page: page.current },
+                }"
                 class="btn btn-outline-secondary"
-                @click="getProduct(product.id)"
+                ><i class="fas fa-pulse"></i> 查看更多</router-link
               >
-                <i class="fas fa-pulse"></i>
-                查看更多
-              </button>
               <button
                 type="button"
                 class="btn btn-outline-danger"
@@ -58,12 +58,6 @@
     :has-next-page="page.hasNext"
     @change-page="getProducts"
   ></pagination>
-
-  <product-modal
-    :product="product"
-    @add-to-cart="addToCart"
-    ref="productModal"
-  ></product-modal>
 </template>
 
 <script>
@@ -71,9 +65,9 @@
 // console.log('this', this) // undefined
 
 import pagination from '@/components/Pagination.vue'
-import productModal from '@/components/ProductModal.vue'
 
 export default {
+  props: ['listPage'],
   data () {
     return {
       products: [],
@@ -90,11 +84,11 @@ export default {
     }
   },
   components: {
-    pagination,
-    productModal
+    pagination
   },
   mounted () {
-    this.getProducts()
+    const page = (this.listPage > 1) ? this.listPage : 1
+    this.getProducts(page)
   },
   watch: {
     isLoading (status) {
@@ -105,6 +99,10 @@ export default {
         return
       }
       if (this.loader) this.loader.hide()
+    },
+    // 監聽物件內的變數，(有雙向綁定外層的 App.vue)
+    'page.current': function () {
+      this.$emit('update:list-page', this.page.current)
     }
   },
   methods: {
@@ -133,24 +131,6 @@ export default {
           this.page.current = res.data.pagination.current_page
           this.page.hasPre = res.data.pagination.has_pre
           this.page.hasNext = res.data.pagination.has_next
-          this.isLoading = false
-        })
-        .catch(err => console.dir(err))
-    },
-
-    getProduct (productId) {
-      this.isLoading = true
-
-      this.$http.get(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/product/${productId}`)
-        .then(res => {
-          if (!res.data.success) {
-            alert('獲取產品詳細資料失敗！')
-            this.isLoading = false
-            return
-          }
-
-          this.product = res.data.product
-          this.$refs.productModal.openModal()
           this.isLoading = false
         })
         .catch(err => console.dir(err))

@@ -16,6 +16,14 @@ const routes = [
     component: () => import('@/views/Products.vue')
   },
   {
+    path: '/product/:id',
+    name: 'Product',
+    component: () => import('@/views/Product.vue')
+    // props: (route) => {
+    //   return { page: route.query.page }
+    // }
+  },
+  {
     path: '/carts',
     name: 'Carts',
     component: () => import('@/views/Carts.vue')
