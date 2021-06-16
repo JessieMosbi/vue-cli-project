@@ -9,7 +9,6 @@ import { localize, setLocale } from '@vee-validate/i18n'
 import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
 
 // vue-axios
-// import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
@@ -17,6 +16,7 @@ import VueAxios from 'vue-axios'
 import VueLoading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 
+// vee-validate setting
 defineRule('required', required)
 defineRule('email', email)
 defineRule('numeric', numeric)
@@ -32,7 +32,6 @@ app.use(router)
 app.use(VueAxios, axios)
 app.use(VueLoading)
 
-// vee-validate
 app.component('Form', Form)
 app.component('Field', Field)
 app.component('ErrorMessage', ErrorMessage)

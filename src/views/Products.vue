@@ -1,22 +1,6 @@
 <template>
-  <h1>我是產品列表頁面</h1>
-
   <!-- 產品列表 -->
   <div class="mt-4" style="position: relative">
-    <div id="product-list-table"></div>
-    <!-- loading is-full-page: false 時，只會作用在包住他的 container 底下（class="mt-4" div） -->
-    <div id="product-list-loading"></div>
-  </div>
-  <div id="product-list-pagination"></div>
-
-  <!-- Components -->
-  <product-modal
-    :product="product"
-    @add-to-cart="addToCart"
-    ref="productModal"
-  ></product-modal>
-
-  <teleport to="#product-list-table" v-if="isMounted">
     <table class="table align-middle">
       <thead>
         <tr>
@@ -65,31 +49,25 @@
         </tr>
       </tbody>
     </table>
-  </teleport>
+  </div>
 
-  <teleport to="#product-list-pagination" v-if="isMounted">
-    <pagination
-      :total-pages="page.total"
-      :current-page="page.current"
-      :has-pre-page="page.hasPre"
-      :has-next-page="page.hasNext"
-      @change-page="getProducts"
-    ></pagination>
-  </teleport>
+  <pagination
+    :total-pages="page.total"
+    :current-page="page.current"
+    :has-pre-page="page.hasPre"
+    :has-next-page="page.hasNext"
+    @change-page="getProducts"
+  ></pagination>
 
-  <!-- <teleport to="#product-list-loading" v-if="isMounted">
-    <loading :active="isLoading" :is-full-page="false"></loading>
-  </teleport> -->
+  <product-modal
+    :product="product"
+    @add-to-cart="addToCart"
+    ref="productModal"
+  ></product-modal>
 </template>
 
 <script>
-// import mitt from 'mitt'
-// const emitter = mitt()
-
-// const instance = this.$http.create({
-//   baseURL: process.env.VUE_APP_API
-// })
-
+// FIXME: ask why?
 // console.log('this', this) // undefined
 
 import pagination from '@/components/Pagination.vue'
@@ -98,8 +76,6 @@ import productModal from '@/components/ProductModal.vue'
 export default {
   data () {
     return {
-      isMounted: false,
-      isLoading: true,
       products: [],
       page: {
         total: 0,
@@ -107,7 +83,10 @@ export default {
         hasPre: false,
         hasNext: false
       },
-      product: {}
+      product: {},
+      // loading
+      isLoading: false, // watch 一開始不會被觸發，所以不能設 true
+      loader: null // 大家都是同一個 loader，避免重複宣告 2 個
     }
   },
   components: {
@@ -115,8 +94,18 @@ export default {
     productModal
   },
   mounted () {
-    this.isMounted = true
     this.getProducts()
+  },
+  watch: {
+    isLoading (status) {
+      if (status) {
+        this.loader = this.$loading.show({
+          container: null
+        })
+        return
+      }
+      if (this.loader) this.loader.hide()
+    }
   },
   methods: {
     getImageStyle (url) {
@@ -129,18 +118,13 @@ export default {
     },
 
     getProducts (page = 1) {
-      // this.showLoading(true)
-      const loader = this.$loading.show({
-        container: null
-      })
+      this.isLoading = true
 
       this.$http.get(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/products?page=${page}`)
         .then(res => {
-          console.log(res.data)
           if (!res.data.success) {
             alert('獲取產品列表資料失敗！')
-            // this.showLoading(false)
-            loader.hide()
+            this.isLoading = false
             return
           }
 
@@ -149,32 +133,31 @@ export default {
           this.page.current = res.data.pagination.current_page
           this.page.hasPre = res.data.pagination.has_pre
           this.page.hasNext = res.data.pagination.has_next
-          // this.showLoading(false)
-          loader.hide()
+          this.isLoading = false
         })
         .catch(err => console.dir(err))
     },
 
     getProduct (productId) {
+      this.isLoading = true
+
       this.$http.get(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/product/${productId}`)
         .then(res => {
           if (!res.data.success) {
             alert('獲取產品詳細資料失敗！')
-            // return
+            this.isLoading = false
+            return
           }
 
           this.product = res.data.product
           this.$refs.productModal.openModal()
-          // emitter.emit('openProductModal', res.data.product)
+          this.isLoading = false
         })
         .catch(err => console.dir(err))
     },
 
     addToCart (product) {
-      // this.showLoading(true)
-      const loader = this.$loading.show({
-        container: null
-      })
+      this.isLoading = true
 
       const data = {
         data: {
@@ -182,27 +165,20 @@ export default {
           qty: +product.qty
         }
       }
-
       this.$http.post(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/cart`, data)
         .then(res => {
           if (!res.data.success) {
             alert('新增至購物車失敗！')
-            // this.showLoading(false)
-            loader.hide()
+            this.isLoading = false
             return
           }
 
-          // this.getCarts()
-          // emitter.emit('closeProductModal')
-          loader.hide()
-          this.$refs.productModal.closeModal()
+          alert('成功新增至購物車！')
+          this.isLoading = false
+          // this.$refs.productModal.closeModal()
         })
         .catch(err => console.dir(err))
     }
-
-    // showLoading (isShow) {
-    //   this.isLoading = isShow
-    // }
   }
 }
 </script>
