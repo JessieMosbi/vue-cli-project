@@ -1,5 +1,5 @@
 <template>
-  <div class="text-end">
+  <div class="text-end" v-if="carts.length !== 0">
     <button
       class="btn btn-outline-danger"
       type="button"
