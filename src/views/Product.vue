@@ -67,7 +67,7 @@ export default {
     getProduct () {
       this.isLoading = true
 
-      this.$http.get(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/product/${this.product.id}`)
+      this.$http.get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/product/${this.product.id}`)
         .then(res => {
           if (!res.data.success) {
             alert('獲取產品資料失敗！')
@@ -89,7 +89,7 @@ export default {
           qty: +this.qty
         }
       }
-      this.$http.post(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/cart`, data)
+      this.$http.post(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`, data)
         .then(res => {
           if (!res.data.success) {
             alert('新增至購物車失敗！')

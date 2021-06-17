@@ -22,7 +22,7 @@
             <router-link to="/carts" class="nav-link">購物車</router-link>
           </li>
         </ul>
-        <form class="d-flex" @submit="searchProduct">
+        <!-- <form class="d-flex" @submit="searchProduct">
           <input
             class="form-control me-2"
             type="search"
@@ -31,7 +31,7 @@
             v-model="text"
           />
           <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+        </form> -->
       </div>
     </div>
   </nav>
@@ -40,6 +40,17 @@
     <!-- FIXME: 最好只與 Products.vue 雙向綁定，其餘不要綁（現在其他沒接收 props 的會有 warning） -->
     <router-view v-model:list-page="page" />
   </div>
+
+  <footer class="mt-auto bg-light py-3">
+    <div class="container">
+      <div class="d-flex flex-column align-items-center">
+        <router-link to="/login" v-if="this.$route.fullPath !== '/login'"
+          >進入後台</router-link
+        >
+        <div class="mr-1">LazyIsGood © 2021</div>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <script>

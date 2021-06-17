@@ -52,6 +52,7 @@
   </div>
 
   <pagination
+    class="mt-4"
     :total-pages="page.total"
     :current-page="page.current"
     :has-pre-page="page.hasPre"
@@ -118,7 +119,7 @@ export default {
     getProducts (page = 1) {
       this.isLoading = true
 
-      this.$http.get(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/products?page=${page}`)
+      this.$http.get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products?page=${page}`)
         .then(res => {
           if (!res.data.success) {
             alert('獲取產品列表資料失敗！')
@@ -145,7 +146,7 @@ export default {
           qty: +product.qty
         }
       }
-      this.$http.post(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/cart`, data)
+      this.$http.post(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`, data)
         .then(res => {
           if (!res.data.success) {
             alert('新增至購物車失敗！')

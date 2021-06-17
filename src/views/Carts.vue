@@ -182,7 +182,7 @@ export default {
     getCarts () {
       this.isLoading = true
 
-      this.$http.get(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/cart`)
+      this.$http.get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart`)
         .then(res => {
           if (!res.data.success) {
             alert('獲取購物車列表資料失敗！')
@@ -201,7 +201,7 @@ export default {
     deleteCart (cardId) {
       this.isLoading = true
 
-      this.$http.delete(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/cart/${cardId}`)
+      this.$http.delete(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart/${cardId}`)
         .then(res => {
           if (!res.data.success) {
             alert('刪除購物車資料失敗！')
@@ -217,7 +217,7 @@ export default {
     deleteAllCarts () {
       this.isLoading = true
 
-      this.$http.delete(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/carts`)
+      this.$http.delete(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/carts`)
         .then(res => {
           if (!res.data.success) {
             alert('清除購物車資料失敗！')
@@ -246,7 +246,7 @@ export default {
           message: this.message
         }
       }
-      this.$http.post(`${process.env.VUE_APP_API}/${process.env.VUE_APP_PATH}/order`, data)
+      this.$http.post(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order`, data)
         .then(res => {
           if (!res.data.success) {
             alert('新增訂單失敗！')
