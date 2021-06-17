@@ -79,7 +79,7 @@ export default {
 
       this.$http.post(`${process.env.VUE_APP_API}/admin/signin`, this.user)
         .then((res) => {
-          console.log(res.data)
+
           if (!res.data.success) {
             this.errorMessage = '帳密錯誤，登入失敗'
             this.isLoading = false
