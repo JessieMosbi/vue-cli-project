@@ -38,15 +38,22 @@
     </div>
   </nav>
 
-  <router-view />
+  <div class="container">
+    <router-view />
+  </div>
 </template>
 
 <script>
 export default {
-  mounted () {
-    if (!document.cookie.replace(`/(?:(?:^|.*;s*)${process.env.VUE_APP_COOKIE}s*=s*([^;]*).*$)|^.*$/`, '$1')) {
+  // 若設 mounted，則包含子元件的 DOM 都要 ready 才會執行
+  // 我在子元件的 mounted 有用 axios，這樣會導致子元件 mounted 先執行，才換母元件的 mounted 執行 > 導致取不到 token
+  created () {
+    const token = document.cookie.replace(/(?:(?:^|.*;s*)hexschoolvues*=s*([^;]*).*$)|^.*$/, '$1')
+
+    if (!token) {
       this.$router.replace('/login')
     }
+    this.$http.defaults.headers.common.Authorization = token
   }
 }
 </script>
