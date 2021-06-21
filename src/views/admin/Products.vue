@@ -53,15 +53,15 @@
     :has-next-page="page.hasNext"
     @change-page="getData"
   ></pagination>
-  <!-- Modal -->
-  <!-- <product-modal
+
+  <product-modal
     ref="productModal"
     :temp-product="tempProduct"
     :action="nowAction"
     @update-data="getData"
   >
   </product-modal>
-  <delete-modal
+  <!-- <delete-modal
     ref="delProductModal"
     :temp-product="tempProduct"
     @update-data="getData"
@@ -71,6 +71,7 @@
 <script>
 
 import pagination from '@/components/Pagination.vue'
+import productModal from '@/components/ProductModal.vue'
 
 export default {
   data () {
@@ -85,21 +86,39 @@ export default {
       tempProduct: {
         imagesUrl: []
       },
-      nowAction: ''
+      nowAction: '',
+      // loading
+      isLoading: false,
+      loader: null
     }
   },
   components: {
-    pagination
+    pagination,
+    productModal
   },
   mounted () {
     this.getData()
   },
+  watch: {
+    isLoading (status) {
+      if (status) {
+        this.loader = this.$loading.show({
+          container: null
+        })
+        return
+      }
+      if (this.loader) this.loader.hide()
+    }
+  },
   methods: {
     getData (page = 1) {
+      this.isLoading = true
+
       this.$http.get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`)
         .then(res => {
           if (!res.data.success) {
             alert('獲取產品列表資料失敗！')
+            this.isLoading = false
             return
           }
 
@@ -108,8 +127,28 @@ export default {
           this.page.current = res.data.pagination.current_page
           this.page.hasPre = res.data.pagination.has_pre
           this.page.hasNext = res.data.pagination.has_next
+          this.isLoading = false
         })
         .catch(err => console.dir(err))
+    },
+
+    openModal (action, id = null) {
+      // 紀錄目前動作 (productModal 判斷 add/edit 會用到)
+      this.nowAction = action
+
+      // tempProduct 設定: imagesUrl 預設先給 blank array，這樣前台 add picture 可以直接 push
+      if (action === 'add') {
+        this.tempProduct = { imagesUrl: [] }
+      } else if ((action === 'edit' || action === 'delete') && id) {
+        this.tempProduct = { ...this.products.find(product => product.id === id) }
+        this.tempProduct.id = id
+        if (this.tempProduct.imagesUrl === undefined) this.tempProduct.imagesUrl = []
+      }
+      this.tempProduct.num = 1 // html 裡面沒數量，先填 1
+
+      // open target modal
+      if (action === 'add' || action === 'edit') this.$refs.productModal.openModal()
+      else if (action === 'delete') this.$refs.delProductModal.openModal()
     }
   }
 }
