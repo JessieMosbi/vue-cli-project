@@ -61,17 +61,18 @@
     @update-data="getData"
   >
   </product-modal>
-  <!-- <delete-modal
+  <delete-product-modal
     ref="delProductModal"
     :temp-product="tempProduct"
     @update-data="getData"
-  ></delete-modal> -->
+  ></delete-product-modal>
 </template>
 
 <script>
 
 import pagination from '@/components/Pagination.vue'
 import productModal from '@/components/ProductModal.vue'
+import deleteProductModal from '@/components/DeleteProductModal.vue'
 
 export default {
   data () {
@@ -94,7 +95,8 @@ export default {
   },
   components: {
     pagination,
-    productModal
+    productModal,
+    deleteProductModal
   },
   mounted () {
     this.getData()
