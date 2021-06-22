@@ -13,11 +13,11 @@
     </thead>
     <tbody>
       <tr v-for="order in orders" :key="order.id">
-        <td>{{ order.create_at }}</td>
+        <td>{{ date(order.create_at) }}</td>
         <td>{{ order.id }}</td>
         <td>{{ order.user.name }}</td>
         <td>{{ order.user.email }}</td>
-        <td>{{ order.total }}</td>
+        <td>${{ currency(order.total) }}</td>
         <td>
           <span class="text-success" v-if="order.is_paid">已付款</span>
           <span v-else>未付款</span>

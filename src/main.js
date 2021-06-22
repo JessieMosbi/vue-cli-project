@@ -16,6 +16,9 @@ import VueAxios from 'vue-axios'
 import VueLoading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 
+// Other
+import { currency, date } from '@/assets/transfer.js'
+
 // vee-validate setting
 defineRule('required', required)
 defineRule('email', email)
@@ -37,6 +40,7 @@ app.component('Field', Field)
 app.component('ErrorMessage', ErrorMessage)
 
 // global properties
-// app.config.globalProperties.instance = instance
+app.config.globalProperties.currency = currency
+app.config.globalProperties.date = date
 
 app.mount('#app')
