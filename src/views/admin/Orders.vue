@@ -43,10 +43,18 @@
       </tr>
     </tbody>
   </table>
+  <pagination
+    :total-pages="page.total"
+    :current-page="page.current"
+    :has-pre-page="page.hasPre"
+    :has-next-page="page.hasNext"
+    @change-page="getData"
+  ></pagination>
 
   <order-modal
     :temp-order="tempOrder"
     @update-data="getData"
+    :list-page="page.current"
     ref="orderModal"
   ></order-modal>
 
@@ -59,6 +67,7 @@
 
 <script>
 
+import pagination from '@/components/Pagination.vue'
 import orderModal from '@/components/OrderModal.vue'
 import deleteOrderModal from '@/components/DeleteOrderModal.vue'
 
@@ -80,7 +89,7 @@ export default {
     }
   },
   components: {
-    // pagination,
+    pagination,
     orderModal,
     deleteOrderModal
   },
@@ -100,6 +109,7 @@ export default {
   },
   methods: {
     getData (page = 1) {
+      console.log(`page is ${page}`)
       this.isLoading = true
 
       this.$http.get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/orders?page=${page}`)

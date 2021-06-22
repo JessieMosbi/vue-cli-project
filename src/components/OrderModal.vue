@@ -147,7 +147,7 @@
 import Modal from 'bootstrap/js/dist/modal.js'
 
 export default {
-  props: ['tempOrder'],
+  props: ['tempOrder', 'listPage'],
   data () {
     return {
       order: {},
@@ -194,7 +194,6 @@ export default {
     },
 
     updateOrder () {
-      console.log(`updateOrder: ${this.order.id}`)
       this.isLoading = true
 
       const data = {
@@ -215,7 +214,7 @@ export default {
           this.isLoading = false
 
           this.modal.hide()
-          this.$emit('updateData')
+          this.$emit('updateData', this.listPage) // 讓 list 停留在同一頁
         })
         .catch(err => console.dir(err))
     }
