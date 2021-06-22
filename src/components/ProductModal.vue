@@ -22,216 +22,225 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="mb-1">
-                <div class="form-group">
-                  <label for="imageUrl">輸入主圖片網址</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="請輸入圖片連結"
-                    v-model.trim="product.imageUrl"
-                  />
-                </div>
-                <img
-                  class="img-fluid"
-                  :src="product.imageUrl"
-                  :alt="product.imageUrl"
-                />
-              </div>
-              <div v-if="product.imageUrl">
-                <button
-                  class="btn btn-outline-danger btn-sm d-block w-100"
-                  @click="deletePicture('main')"
-                >
-                  刪除主圖片
-                </button>
-              </div>
-              <template
-                v-for="(image, index) in product.imagesUrl"
-                :key="index"
-              >
+        <Form
+          v-slot="{ errors }"
+          class="m-4"
+          @submit="editProduct"
+          ref="product-form"
+        >
+          <div class="modal-body">
+            {{ product }}
+            <div class="row">
+              <div class="col-sm-4">
                 <div class="mb-1">
                   <div class="form-group">
-                    <label for="imageUrl">輸入圖片網址</label>
+                    <label for="imageUrl">輸入主圖片網址</label>
                     <input
                       type="text"
                       class="form-control"
                       placeholder="請輸入圖片連結"
-                      v-model.trim="product.imagesUrl[index]"
+                      v-model.trim="product.imageUrl"
                     />
                   </div>
-                  <img class="img-fluid" :src="image" :alt="image" />
+                  <img
+                    class="img-fluid"
+                    :src="product.imageUrl"
+                    :alt="product.imageUrl"
+                  />
                 </div>
-                <div>
+                <div v-if="product.imageUrl">
                   <button
                     class="btn btn-outline-danger btn-sm d-block w-100"
-                    @click="deletePicture(index)"
+                    @click="deletePicture('main')"
                   >
-                    刪除圖片
+                    刪除主圖片
                   </button>
                 </div>
-              </template>
-              <div v-if="product.imagesUrl.length < 5">
-                <button
-                  class="btn btn-outline-primary btn-sm d-block w-100"
-                  @click="addPicture"
+                <template
+                  v-for="(image, index) in product.imagesUrl"
+                  :key="index"
                 >
-                  新增圖片
-                </button>
-              </div>
-            </div>
-            <div class="col-sm-8">
-              <div class="form-group">
-                <label for="title">標題</label>
-                <input
-                  id="title"
-                  type="text"
-                  class="form-control"
-                  placeholder="請輸入標題"
-                  v-model.trim="product.title"
-                />
-                <div
-                  class="invalid-feedback"
-                  :class="{ 'd-block': !product.title }"
-                  v-if="isClickSendBtn"
-                >
-                  標題為必填
+                  <div class="mb-1">
+                    <div class="form-group">
+                      <label for="imageUrl">輸入圖片網址</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="請輸入圖片連結"
+                        v-model.trim="product.imagesUrl[index]"
+                      />
+                    </div>
+                    <img class="img-fluid" :src="image" :alt="image" />
+                  </div>
+                  <div>
+                    <button
+                      class="btn btn-outline-danger btn-sm d-block w-100"
+                      @click="deletePicture(index)"
+                    >
+                      刪除圖片
+                    </button>
+                  </div>
+                </template>
+                <div v-if="product.imagesUrl.length < 5">
+                  <button
+                    class="btn btn-outline-primary btn-sm d-block w-100"
+                    @click="addPicture"
+                  >
+                    新增圖片
+                  </button>
                 </div>
               </div>
+              <div class="col-sm-8">
+                <div class="form-group">
+                  <label for="title">標題</label>
+                  <Field
+                    type="text"
+                    id="title"
+                    name="標題"
+                    class="form-control"
+                    :class="{ 'is-invalid': errors['標題'] }"
+                    rules="required"
+                    v-model.trim="product.title"
+                    placeholder="請輸入標題"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    :class="{ 'd-block': !product.title }"
+                    v-if="isClickSendBtn"
+                  >
+                    標題為必填
+                  </div>
+                </div>
 
-              <div class="row">
-                <div class="form-group col-md-6">
-                  <label for="category">分類</label>
-                  <input
-                    id="category"
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label for="category">分類</label>
+                    <input
+                      id="category"
+                      type="text"
+                      class="form-control"
+                      placeholder="請輸入分類"
+                      v-model.trim="product.category"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      :class="{ 'd-block': !product.category }"
+                      v-if="isClickSendBtn"
+                    >
+                      分類為必填
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="unit">單位</label>
+                    <input
+                      id="unit"
+                      type="text"
+                      class="form-control"
+                      placeholder="請輸入單位"
+                      v-model.trim="product.unit"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      :class="{ 'd-block': !product.unit }"
+                      v-if="isClickSendBtn"
+                    >
+                      單位為必填
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label for="origin_price">原價</label>
+                    <input
+                      id="origin_price"
+                      type="number"
+                      min="0"
+                      class="form-control"
+                      placeholder="請輸入原價"
+                      v-model.number="product.origin_price"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      :class="{ 'd-block': !product.origin_price }"
+                      v-if="isClickSendBtn"
+                    >
+                      原價為必填
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="price">售價</label>
+                    <input
+                      id="price"
+                      type="number"
+                      min="0"
+                      class="form-control"
+                      placeholder="請輸入售價"
+                      v-model.number="product.price"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      :class="{ 'd-block': !product.price }"
+                      v-if="isClickSendBtn"
+                    >
+                      售價為必填
+                    </div>
+                  </div>
+                </div>
+                <hr />
+
+                <div class="form-group">
+                  <label for="description">產品描述</label>
+                  <textarea
+                    id="description"
                     type="text"
                     class="form-control"
-                    placeholder="請輸入分類"
-                    v-model.trim="product.category"
-                  />
-                  <div
-                    class="invalid-feedback"
-                    :class="{ 'd-block': !product.category }"
-                    v-if="isClickSendBtn"
+                    placeholder="請輸入產品描述"
+                    v-model.trim="product.description"
                   >
-                    分類為必填
-                  </div>
+                  </textarea>
                 </div>
-                <div class="form-group col-md-6">
-                  <label for="unit">單位</label>
-                  <input
-                    id="unit"
+                <div class="form-group">
+                  <label for="content">說明內容</label>
+                  <textarea
+                    id="content"
                     type="text"
                     class="form-control"
-                    placeholder="請輸入單位"
-                    v-model.trim="product.unit"
-                  />
-                  <div
-                    class="invalid-feedback"
-                    :class="{ 'd-block': !product.unit }"
-                    v-if="isClickSendBtn"
+                    placeholder="請輸入說明內容"
+                    v-model.trim="product.content"
                   >
-                    單位為必填
-                  </div>
+                  </textarea>
                 </div>
-              </div>
-
-              <div class="row">
-                <div class="form-group col-md-6">
-                  <label for="origin_price">原價</label>
-                  <input
-                    id="origin_price"
-                    type="number"
-                    min="0"
-                    class="form-control"
-                    placeholder="請輸入原價"
-                    v-model.number="product.origin_price"
-                  />
-                  <div
-                    class="invalid-feedback"
-                    :class="{ 'd-block': !product.origin_price }"
-                    v-if="isClickSendBtn"
-                  >
-                    原價為必填
+                <div class="form-group">
+                  <div class="form-check">
+                    <input
+                      id="is_enabled"
+                      class="form-check-input"
+                      type="checkbox"
+                      :true-value="1"
+                      :false-value="0"
+                      v-model="product.is_enabled"
+                    />
+                    <label class="form-check-label" for="is_enabled"
+                      >是否啟用</label
+                    >
                   </div>
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="price">售價</label>
-                  <input
-                    id="price"
-                    type="number"
-                    min="0"
-                    class="form-control"
-                    placeholder="請輸入售價"
-                    v-model.number="product.price"
-                  />
-                  <div
-                    class="invalid-feedback"
-                    :class="{ 'd-block': !product.price }"
-                    v-if="isClickSendBtn"
-                  >
-                    售價為必填
-                  </div>
-                </div>
-              </div>
-              <hr />
-
-              <div class="form-group">
-                <label for="description">產品描述</label>
-                <textarea
-                  id="description"
-                  type="text"
-                  class="form-control"
-                  placeholder="請輸入產品描述"
-                  v-model.trim="product.description"
-                >
-                </textarea>
-              </div>
-              <div class="form-group">
-                <label for="content">說明內容</label>
-                <textarea
-                  id="content"
-                  type="text"
-                  class="form-control"
-                  placeholder="請輸入說明內容"
-                  v-model.trim="product.content"
-                >
-                </textarea>
-              </div>
-              <div class="form-group">
-                <div class="form-check">
-                  <input
-                    id="is_enabled"
-                    class="form-check-input"
-                    type="checkbox"
-                    :true-value="1"
-                    :false-value="0"
-                    v-model="product.is_enabled"
-                  />
-                  <label class="form-check-label" for="is_enabled"
-                    >是否啟用</label
-                  >
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-outline-secondary"
-            data-bs-dismiss="modal"
-            @click="isClickSendBtn = 0"
-          >
-            取消
-          </button>
-          <button type="button" class="btn btn-primary" @click="editProduct">
-            確認
-          </button>
-        </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+              @click="isClickSendBtn = 0"
+            >
+              取消
+            </button>
+            <button type="submit" class="btn btn-primary">確認</button>
+          </div>
+        </Form>
       </div>
     </div>
   </div>
