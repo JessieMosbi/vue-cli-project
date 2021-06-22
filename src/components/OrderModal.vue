@@ -183,6 +183,8 @@ export default {
       //   console.log(this.order.products[productId].product.title)
       //   // console.log(this.order.products[productId].title)
       // })
+      this.temp.is_paid = this.order.is_paid
+      console.log(this.temp.is_paid)
     }
   },
   methods: {
@@ -190,7 +192,6 @@ export default {
       console.log('openModal')
       console.log(this.order)
       this.modal.show()
-      this.temp.is_paid = this.order.is_paid
     },
 
     updateOrder () {
@@ -205,6 +206,7 @@ export default {
 
       this.$http.put(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.order.id}`, data)
         .then(res => {
+          console.log(res.data)
           if (!res.data.success) {
             alert('訂單更新失敗！')
             this.isLoading = false
