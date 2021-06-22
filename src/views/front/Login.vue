@@ -63,7 +63,7 @@ export default {
     }
   },
   mounted () {
-    if (document.cookie.replace(`/(?:(?:^|.*;s*)${process.env.VUE_APP_COOKIE}s*=s*([^;]*).*$)|^.*$/`, '$1')) {
+    if (document.cookie.replace(/(?:(?:^|.*;\s*)hexschoolvue\s*=\s*([^;]*).*$)|^.*$/, '$1')) {
       this.$router.replace('/admin')
     }
   },

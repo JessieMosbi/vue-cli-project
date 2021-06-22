@@ -48,7 +48,7 @@ export default {
   // 若設 mounted，則包含子元件的 DOM 都要 ready 才會執行
   // 我在子元件的 mounted 有用 axios，這樣會導致子元件 mounted 先執行，才換母元件的 mounted 執行 > 導致取不到 token
   created () {
-    const token = document.cookie.replace(/(?:(?:^|.*;s*)hexschoolvues*=s*([^;]*).*$)|^.*$/, '$1')
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexschoolvue\s*=\s*([^;]*).*$)|^.*$/, '$1')
 
     if (!token) {
       this.$router.replace('/login')
