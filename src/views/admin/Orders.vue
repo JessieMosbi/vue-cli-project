@@ -3,6 +3,7 @@
     <thead>
       <tr>
         <th width="120">購買時間</th>
+        <th width="120">編號</th>
         <th width="120">姓名</th>
         <th width="120">Email</th>
         <th width="120">應付金額</th>
@@ -13,6 +14,7 @@
     <tbody>
       <tr v-for="order in orders" :key="order.id">
         <td>{{ order.create_at }}</td>
+        <td>{{ order.id }}</td>
         <td>{{ order.user.name }}</td>
         <td>{{ order.user.email }}</td>
         <td>{{ order.total }}</td>
@@ -42,12 +44,23 @@
     </tbody>
   </table>
 
-  <order-modal :temp-order="tempOrder" ref="orderModal"></order-modal>
+  <order-modal
+    :temp-order="tempOrder"
+    @update-data="getData"
+    ref="orderModal"
+  ></order-modal>
+
+  <delete-order-modal
+    :temp-order="tempOrder"
+    @update-data="getData"
+    ref="delOrderModal"
+  ></delete-order-modal>
 </template>
 
 <script>
 
 import orderModal from '@/components/OrderModal.vue'
+import deleteOrderModal from '@/components/DeleteOrderModal.vue'
 
 export default {
   data () {
@@ -68,8 +81,8 @@ export default {
   },
   components: {
     // pagination,
-    orderModal
-    // deleteProductModal
+    orderModal,
+    deleteOrderModal
   },
   mounted () {
     this.getData()
@@ -123,8 +136,9 @@ export default {
         //   this.$refs.orderModal.openModal()
         // })
         this.$refs.orderModal.openModal()
+      } else if (action === 'delete') {
+        this.$refs.delOrderModal.openModal()
       }
-      // else if (action === 'delete') this.$refs.delOrderModal.openModal()
     }
   }
 }

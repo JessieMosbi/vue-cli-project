@@ -22,11 +22,12 @@
           ></button>
         </div>
         <div class="modal-body">
+          {{ temp.is_paid }}
           <div class="row">
             <div class="col-md-4">
               <h3>用戶資料</h3>
               <table class="table">
-                <tbody>
+                <tbody v-if="order.user">
                   <tr>
                     <th style="width: 100px">姓名</th>
                     <td>{{ order.user.name }}</td>
@@ -61,14 +62,14 @@
                   <tr>
                     <th>付款時間</th>
                     <td>
-                      <span v-if="is_paid"> 時間? </span>
+                      <span v-if="order.is_paid"> 時間? </span>
                       <span v-else>尚未付款</span>
                     </td>
                   </tr>
                   <tr>
                     <th>付款狀態</th>
                     <td>
-                      <strong class="text-success" v-if="is_paid"
+                      <strong class="text-success" v-if="order.is_paid"
                         >已付款</strong
                       >
                       <span class="text-muted" v-else>尚未付款</span>
@@ -85,11 +86,24 @@
                 <thead>
                   <tr></tr>
                 </thead>
-                <tbody>
+                <tbody v-if="order.products">
                   <tr>
                     <th>名稱</th>
-                    <td>數量 / 單位</td>
-                    <td class="text-end">金額</td>
+                    <th>數量 / 單位</th>
+                    <th class="text-end">金額</th>
+                  </tr>
+                  <tr
+                    v-for="productId in Object.keys(order.products)"
+                    :key="productId"
+                  >
+                    <td>{{ order.products[productId].product.title }}</td>
+                    <td>
+                      {{ order.products[productId].product.num }} /
+                      {{ order.products[productId].product.unit }}
+                    </td>
+                    <td class="text-end">
+                      {{ order.products[productId].product.price }}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -98,12 +112,13 @@
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    value=""
                     id="flexCheckDefault"
+                    ref="isPaidCheckbox"
+                    v-model="temp.is_paid"
                   />
                   <label class="form-check-label" for="flexCheckDefault">
-                    <span>已付款</span>
-                    <span>未付款</span>
+                    <span v-if="temp.is_paid">已付款</span>
+                    <span v-else>未付款</span>
                   </label>
                 </div>
               </div>
@@ -118,7 +133,9 @@
           >
             取消
           </button>
-          <button type="button" class="btn btn-primary">修改付款狀態</button>
+          <button type="button" class="btn btn-primary" @click="updateOrder">
+            修改付款狀態
+          </button>
         </div>
       </div>
     </div>
@@ -134,18 +151,38 @@ export default {
   data () {
     return {
       order: {},
-      modal: null
+      modal: null,
+      temp: {
+        is_paid: false
+      },
+      // loading
+      isLoading: false,
+      loader: null
     }
   },
   mounted () {
     this.modal = new Modal(this.$refs.orderModal, null)
   },
   watch: {
+    isLoading (status) {
+      if (status) {
+        this.loader = this.$loading.show({
+          container: null
+        })
+        return
+      }
+      if (this.loader) this.loader.hide()
+    },
     tempOrder () {
       this.order = this.tempOrder
       // openModal 比 watch 更早觸發？
       console.log('watch')
       console.log(this.order)
+      // console.log(Object.keys(this.order.products))
+      // Object.keys(this.order.products).forEach(productId => {
+      //   console.log(this.order.products[productId].product.title)
+      //   // console.log(this.order.products[productId].title)
+      // })
     }
   },
   methods: {
@@ -153,6 +190,34 @@ export default {
       console.log('openModal')
       console.log(this.order)
       this.modal.show()
+      this.temp.is_paid = this.order.is_paid
+    },
+
+    updateOrder () {
+      console.log(`updateOrder: ${this.order.id}`)
+      this.isLoading = true
+
+      const data = {
+        data: {
+          is_paid: this.temp.is_paid,
+          total: this.order.total
+        }
+      }
+
+      this.$http.put(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.order.id}`, data)
+        .then(res => {
+          if (!res.data.success) {
+            alert('訂單更新失敗！')
+            this.isLoading = false
+            return
+          }
+          alert('訂單更新成功！')
+          this.isLoading = false
+
+          this.modal.hide()
+          this.$emit('updateData')
+        })
+        .catch(err => console.dir(err))
     }
   }
 }
