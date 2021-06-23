@@ -1,0 +1,201 @@
+<template>
+  <div
+    class="modal fade"
+    id="couponModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+    ref="modal"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            <span v-if="!coupon.id">新增優惠卷</span>
+            <span v-else>編輯優惠卷</span>
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          {{ coupon }}
+          <div class="mb-3">
+            <label for="title">標題</label>
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              v-model="coupon.title"
+              placeholder="請輸入標題"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="coupon_code">優惠碼</label>
+            <input
+              type="text"
+              class="form-control"
+              id="coupon_code"
+              v-model="coupon.code"
+              placeholder="請輸入優惠碼"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="due_date">到期日</label>
+            <input
+              type="date"
+              class="form-control"
+              id="due_date"
+              v-model="coupon.due_date"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="price">折扣百分比</label>
+            <input
+              type="number"
+              class="form-control"
+              id="price"
+              min="0"
+              v-model="coupon.percent"
+              placeholder="請輸入折扣百分比"
+            />
+          </div>
+          <div class="mb-3">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="is_enabled"
+                v-model="coupon.is_enabled"
+                true-value="1"
+                false-value="0"
+              />
+              <label class="form-check-label" for="is_enabled">
+                是否啟用
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" @click="editCoupon">
+            <span v-if="!coupon.id">新增</span>
+            <span v-else>更新</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+import Modal from 'bootstrap/js/dist/modal.js'
+
+export default {
+  props: ['tempCoupon', 'action', 'listPage'],
+  data () {
+    return {
+      modal: null,
+      coupon: { is_enabled: 0 },
+      // loading
+      isLoading: false,
+      loader: null
+    }
+  },
+  watch: {
+    isLoading (status) {
+      if (status) {
+        this.loader = this.$loading.show({
+          container: null
+        })
+        return
+      }
+      if (this.loader) this.loader.hide()
+    },
+    tempCoupon () {
+      // input type date format: yyyy-mm-dd
+      this.coupon = { ...this.tempCoupon }
+
+      if (this.action === 'edit') {
+        const tempTime = new Date(this.tempCoupon.due_date * 1000)
+        const mm = tempTime.getMonth() + 1
+        const dd = tempTime.getDate()
+        this.coupon.due_date = [tempTime.getFullYear(), (mm < 10 ? '0' + mm : mm), (dd < 10 ? '0' + dd : dd)].join('-')
+      }
+      console.log('CouponsOmdal.vue watch')
+      console.log(this.coupon)
+    }
+  },
+  mounted () {
+    this.modal = new Modal(this.$refs.modal, null)
+  },
+  methods: {
+    openModal () {
+      console.log('CouponsOmdal.vue openModal')
+      console.log(this.tempCoupon)
+      this.modal.show()
+    },
+
+    editCoupon () {
+      this.isLoading = true
+
+      if (!this.coupon.title || !this.coupon.percent || !this.coupon.due_date || !this.coupon.code) {
+        alert('請檢查必填欄位！')
+        this.isLoading = false
+        return
+      }
+
+      const temp = { ...this.coupon }
+      temp.due_date = (new Date(temp.due_date).getTime()) / 1000
+      temp.percent = +(temp.percent)
+      temp.is_enabled = +(temp.is_enabled)
+
+      console.log(temp)
+
+      // const tempUnix = (new Date(this.coupon.due_date).getTime()) / 1000
+      // console.log(this.date(tempUnix))
+
+      let actionName = ''
+      let path = ''
+      let method = ''
+      const data = { data: temp }
+      if (this.action === 'add') {
+        actionName = '新增'
+        path = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupon`
+        method = 'post'
+      } else if (this.action === 'edit') {
+        actionName = '編輯'
+        path = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupon/${temp.id}`
+        method = 'put'
+      }
+
+      this.$http[method](path, data)
+        .then(res => {
+          console.log(res.data)
+          if (!res.data.success) {
+            alert(`${actionName}失敗！`)
+            this.isLoading = false
+            return
+          }
+          alert(`${actionName}成功！`)
+          this.isLoading = false
+
+          this.modal.hide()
+          this.$emit('updateData', this.listPage)
+        })
+        .catch(err => console.dir(err))
+    }
+  }
+}
+</script>
