@@ -115,108 +115,93 @@
                 <div class="row">
                   <div class="form-group col-md-6">
                     <label for="category">分類</label>
-                    <input
-                      id="category"
+                    <Field
                       type="text"
+                      id="category"
+                      name="分類"
                       class="form-control"
-                      placeholder="請輸入分類"
+                      :class="{ 'is-invalid': errors['分類'] }"
+                      rules="required"
                       v-model.trim="product.category"
+                      placeholder="請輸入分類"
                     />
-                    <div
-                      class="invalid-feedback"
-                      :class="{ 'd-block': !product.category }"
-                      v-if="isClickSendBtn"
-                    >
-                      分類為必填
-                    </div>
                   </div>
                   <div class="form-group col-md-6">
                     <label for="unit">單位</label>
-                    <input
-                      id="unit"
+                    <Field
                       type="text"
+                      id="unit"
+                      name="單位"
                       class="form-control"
-                      placeholder="請輸入單位"
+                      :class="{ 'is-invalid': errors['單位'] }"
+                      rules="required"
                       v-model.trim="product.unit"
+                      placeholder="請輸入單位"
                     />
-                    <div
-                      class="invalid-feedback"
-                      :class="{ 'd-block': !product.unit }"
-                      v-if="isClickSendBtn"
-                    >
-                      單位為必填
-                    </div>
                   </div>
                 </div>
 
                 <div class="row">
                   <div class="form-group col-md-6">
                     <label for="origin_price">原價</label>
-                    <input
-                      id="origin_price"
+                    <Field
                       type="number"
-                      min="0"
+                      id="origin_price"
+                      name="原價"
                       class="form-control"
-                      placeholder="請輸入原價"
+                      :class="{ 'is-invalid': errors['原價'] }"
+                      min="0"
+                      rules="required"
                       v-model.number="product.origin_price"
+                      placeholder="請輸入原價"
                     />
-                    <div
-                      class="invalid-feedback"
-                      :class="{ 'd-block': !product.origin_price }"
-                      v-if="isClickSendBtn"
-                    >
-                      原價為必填
-                    </div>
                   </div>
                   <div class="form-group col-md-6">
                     <label for="price">售價</label>
-                    <input
-                      id="price"
+                    <Field
                       type="number"
-                      min="0"
+                      id="price"
+                      name="售價"
                       class="form-control"
-                      placeholder="請輸入售價"
+                      :class="{ 'is-invalid': errors['售價'] }"
+                      min="0"
+                      rules="required"
                       v-model.number="product.price"
+                      placeholder="請輸入售價"
                     />
-                    <div
-                      class="invalid-feedback"
-                      :class="{ 'd-block': !product.price }"
-                      v-if="isClickSendBtn"
-                    >
-                      售價為必填
-                    </div>
                   </div>
                 </div>
                 <hr />
 
                 <div class="form-group">
                   <label for="description">產品描述</label>
-                  <textarea
+                  <Field
+                    as="textarea"
                     id="description"
-                    type="text"
+                    name="產品描述"
                     class="form-control"
-                    placeholder="請輸入產品描述"
                     v-model.trim="product.description"
-                  >
-                  </textarea>
+                    placeholder="請輸入產品描述"
+                  />
                 </div>
                 <div class="form-group">
                   <label for="content">說明內容</label>
-                  <textarea
+                  <Field
+                    as="textarea"
                     id="content"
-                    type="text"
+                    name="說明內容"
                     class="form-control"
-                    placeholder="請輸入說明內容"
                     v-model.trim="product.content"
-                  >
-                  </textarea>
+                    placeholder="請輸入說明內容"
+                  />
                 </div>
                 <div class="form-group">
                   <div class="form-check">
-                    <input
-                      id="is_enabled"
-                      class="form-check-input"
+                    <Field
                       type="checkbox"
+                      id="is_enabled"
+                      name="是否啟用"
+                      class="form-check-input"
                       :true-value="1"
                       :false-value="0"
                       v-model="product.is_enabled"
@@ -268,21 +253,33 @@ export default {
   watch: {
     // Eslint 較嚴格，即便是改物件屬性，也不能改 root component 傳建來的 props，故用 watch 接到自己的 data 裡面
     tempProduct () {
-      this.product = { ...this.tempProduct }
-      // if (this.action === 'add') {
-      //   this.product = { imagesUrl: [] }
-      // } else if (this.action === 'edit' && this.product.id) {
-      //   // 要用 API get data >> 不用，傳來的 product 物件就是詳細資料了
-      //   console.log(this.product)
-      //   // this.product = { ...this.products.find(product => product.id === this.product.id) }
-      //   // this.product.id = id
-      //   if (this.product.imagesUrl === undefined) this.product.imagesUrl = []
-      // }
-      // this.product.num = 1 // html 裡面沒數量，先填 1
+      console.log('tempProduct watch')
+      // 一但 vee-validate 啟動，就不能在動有綁定 validate 的屬性，否則會有 Error: Cannot convert a Symbol value to a string（因 vee-validate 是基於屬性去驗證的）
+      // this.product = { ...this.tempProduct }
+      console.log('tempProduct')
+      console.log(this.tempProduct)
+
+      // reset
+      Object.keys(this.product).forEach(key => {
+        this.product[key] = ''
+        if (key === 'imagesUrl') this.product[key] = []
+      })
+
+      // give value
+      Object.keys(this.tempProduct).forEach(key => {
+        this.product[key] = this.tempProduct[key]
+      })
+      console.log('product')
+      console.log(this.product)
+
+      // if (this.product.imagesUrl === undefined) this.product.imagesUrl = []
     }
   },
   methods: {
     openModal () {
+      console.log('openModal')
+      // this.$refs['product-form'].resetForm()
+      // console.log(this.product)
       this.modal.show()
     },
 
