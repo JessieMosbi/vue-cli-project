@@ -138,27 +138,19 @@ export default {
       // 紀錄目前動作 (productModal 判斷 add/edit 會用到)
       this.nowAction = action
 
-      this.$refs.productModal.$refs['product-form'].resetForm()
-
       // tempProduct 設定: imagesUrl 預設先給 blank array，這樣前台 add picture 可以直接 push
       if (action === 'add') {
-        // 一但 vee-validate 啟動，就不能在動有綁定 validate 的屬性，否則會有 Error: Cannot convert a Symbol value to a string（因 vee-validate 是基於屬性去驗證的）
-        // 直接用 vee-validate 的 resetForm 屬性最保險，畢竟是 vee-validate 所提供的
-        // console.log(this.tempProduct)
-        // this.tempProduct = { imagesUrl: [] }
-        // this.$refs.productModal.$refs.productForm.resetForm()
+        this.tempProduct = { imagesUrl: [] }
       } else if ((action === 'edit' || action === 'delete') && id) {
-        this.tempProduct = { ...this.products.find(product => product.id === id), id }
+        this.tempProduct = { ...this.products.find(product => product.id === id) }
+        this.tempProduct.id = id
+        if (this.tempProduct.imagesUrl === undefined) this.tempProduct.imagesUrl = []
       }
       this.tempProduct.num = 1 // html 裡面沒數量，先填 1
 
       // open target modal
-      if (action === 'add' || action === 'edit') {
-        // this.$nextTick(() => {
-        //   this.$refs.productModal.openModal()
-        // })
-        this.$refs.productModal.openModal()
-      } else if (action === 'delete') this.$refs.delProductModal.openModal()
+      if (action === 'add' || action === 'edit') this.$refs.productModal.openModal()
+      else if (action === 'delete') this.$refs.delProductModal.openModal()
     }
   }
 }

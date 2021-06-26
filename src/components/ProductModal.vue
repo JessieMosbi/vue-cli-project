@@ -22,210 +22,216 @@
             aria-label="Close"
           ></button>
         </div>
-        <Form
-          v-slot="{ errors }"
-          class="m-4"
-          @submit="editProduct"
-          ref="product-form"
-        >
-          <div class="modal-body">
-            {{ product }}
-            <div class="row">
-              <div class="col-sm-4">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="mb-1">
+                <div class="form-group">
+                  <label for="imageUrl">輸入主圖片網址</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="請輸入圖片連結"
+                    v-model.trim="product.imageUrl"
+                  />
+                </div>
+                <img
+                  class="img-fluid"
+                  :src="product.imageUrl"
+                  :alt="product.imageUrl"
+                />
+              </div>
+              <div v-if="product.imageUrl">
+                <button
+                  class="btn btn-outline-danger btn-sm d-block w-100"
+                  @click="deletePicture('main')"
+                >
+                  刪除主圖片
+                </button>
+              </div>
+              <template
+                v-for="(image, index) in product.imagesUrl"
+                :key="index"
+              >
                 <div class="mb-1">
                   <div class="form-group">
-                    <label for="imageUrl">輸入主圖片網址</label>
+                    <label for="imageUrl">輸入圖片網址</label>
                     <input
                       type="text"
                       class="form-control"
                       placeholder="請輸入圖片連結"
-                      v-model.trim="product.imageUrl"
+                      v-model.trim="product.imagesUrl[index]"
                     />
                   </div>
-                  <img
-                    class="img-fluid"
-                    :src="product.imageUrl"
-                    :alt="product.imageUrl"
-                  />
+                  <img class="img-fluid" :src="image" :alt="image" />
                 </div>
-                <div v-if="product.imageUrl">
+                <div>
                   <button
                     class="btn btn-outline-danger btn-sm d-block w-100"
-                    @click="deletePicture('main')"
+                    @click="deletePicture(index)"
                   >
-                    刪除主圖片
+                    刪除圖片
                   </button>
                 </div>
-                <template
-                  v-for="(image, index) in product.imagesUrl"
-                  :key="index"
+              </template>
+              <div v-if="product.imagesUrl.length < 5">
+                <button
+                  class="btn btn-outline-primary btn-sm d-block w-100"
+                  @click="addPicture"
                 >
-                  <div class="mb-1">
-                    <div class="form-group">
-                      <label for="imageUrl">輸入圖片網址</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        placeholder="請輸入圖片連結"
-                        v-model.trim="product.imagesUrl[index]"
-                      />
-                    </div>
-                    <img class="img-fluid" :src="image" :alt="image" />
-                  </div>
-                  <div>
-                    <button
-                      class="btn btn-outline-danger btn-sm d-block w-100"
-                      @click="deletePicture(index)"
-                    >
-                      刪除圖片
-                    </button>
-                  </div>
-                </template>
-                <div v-if="product.imagesUrl.length < 5">
-                  <button
-                    class="btn btn-outline-primary btn-sm d-block w-100"
-                    @click="addPicture"
-                  >
-                    新增圖片
-                  </button>
+                  新增圖片
+                </button>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <div class="form-group">
+                <label for="title">標題</label>
+                <input
+                  id="title"
+                  type="text"
+                  class="form-control"
+                  placeholder="請輸入標題"
+                  v-model.trim="product.title"
+                />
+                <div
+                  class="invalid-feedback"
+                  :class="{ 'd-block': !product.title }"
+                  v-if="isClickSendBtn"
+                >
+                  標題為必填
                 </div>
               </div>
-              <div class="col-sm-8">
-                <div class="form-group">
-                  <label for="title">標題</label>
-                  <Field
+
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="category">分類</label>
+                  <input
+                    id="category"
                     type="text"
-                    id="title"
-                    name="標題"
                     class="form-control"
-                    :class="{ 'is-invalid': errors['標題'] }"
-                    rules="required"
-                    v-model.trim="product.title"
-                    placeholder="請輸入標題"
+                    placeholder="請輸入分類"
+                    v-model.trim="product.category"
                   />
                   <div
                     class="invalid-feedback"
-                    :class="{ 'd-block': !product.title }"
+                    :class="{ 'd-block': !product.category }"
                     v-if="isClickSendBtn"
                   >
-                    標題為必填
+                    分類為必填
                   </div>
                 </div>
-
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label for="category">分類</label>
-                    <Field
-                      type="text"
-                      id="category"
-                      name="分類"
-                      class="form-control"
-                      :class="{ 'is-invalid': errors['分類'] }"
-                      rules="required"
-                      v-model.trim="product.category"
-                      placeholder="請輸入分類"
-                    />
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="unit">單位</label>
-                    <Field
-                      type="text"
-                      id="unit"
-                      name="單位"
-                      class="form-control"
-                      :class="{ 'is-invalid': errors['單位'] }"
-                      rules="required"
-                      v-model.trim="product.unit"
-                      placeholder="請輸入單位"
-                    />
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label for="origin_price">原價</label>
-                    <Field
-                      type="number"
-                      id="origin_price"
-                      name="原價"
-                      class="form-control"
-                      :class="{ 'is-invalid': errors['原價'] }"
-                      min="0"
-                      rules="required"
-                      v-model.number="product.origin_price"
-                      placeholder="請輸入原價"
-                    />
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="price">售價</label>
-                    <Field
-                      type="number"
-                      id="price"
-                      name="售價"
-                      class="form-control"
-                      :class="{ 'is-invalid': errors['售價'] }"
-                      min="0"
-                      rules="required"
-                      v-model.number="product.price"
-                      placeholder="請輸入售價"
-                    />
-                  </div>
-                </div>
-                <hr />
-
-                <div class="form-group">
-                  <label for="description">產品描述</label>
-                  <Field
-                    as="textarea"
-                    id="description"
-                    name="產品描述"
+                <div class="form-group col-md-6">
+                  <label for="unit">單位</label>
+                  <input
+                    id="unit"
+                    type="text"
                     class="form-control"
-                    v-model.trim="product.description"
-                    placeholder="請輸入產品描述"
+                    placeholder="請輸入單位"
+                    v-model.trim="product.unit"
                   />
-                </div>
-                <div class="form-group">
-                  <label for="content">說明內容</label>
-                  <Field
-                    as="textarea"
-                    id="content"
-                    name="說明內容"
-                    class="form-control"
-                    v-model.trim="product.content"
-                    placeholder="請輸入說明內容"
-                  />
-                </div>
-                <div class="form-group">
-                  <div class="form-check">
-                    <Field
-                      type="checkbox"
-                      id="is_enabled"
-                      name="是否啟用"
-                      class="form-check-input"
-                      :true-value="1"
-                      :false-value="0"
-                      v-model="product.is_enabled"
-                    />
-                    <label class="form-check-label" for="is_enabled"
-                      >是否啟用</label
-                    >
+                  <div
+                    class="invalid-feedback"
+                    :class="{ 'd-block': !product.unit }"
+                    v-if="isClickSendBtn"
+                  >
+                    單位為必填
                   </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="origin_price">原價</label>
+                  <input
+                    id="origin_price"
+                    type="number"
+                    min="0"
+                    class="form-control"
+                    placeholder="請輸入原價"
+                    v-model.number="product.origin_price"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    :class="{ 'd-block': !product.origin_price }"
+                    v-if="isClickSendBtn"
+                  >
+                    原價為必填
+                  </div>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="price">售價</label>
+                  <input
+                    id="price"
+                    type="number"
+                    min="0"
+                    class="form-control"
+                    placeholder="請輸入售價"
+                    v-model.number="product.price"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    :class="{ 'd-block': !product.price }"
+                    v-if="isClickSendBtn"
+                  >
+                    售價為必填
+                  </div>
+                </div>
+              </div>
+              <hr />
+
+              <div class="form-group">
+                <label for="description">產品描述</label>
+                <textarea
+                  id="description"
+                  type="text"
+                  class="form-control"
+                  placeholder="請輸入產品描述"
+                  v-model.trim="product.description"
+                >
+                </textarea>
+              </div>
+              <div class="form-group">
+                <label for="content">說明內容</label>
+                <textarea
+                  id="content"
+                  type="text"
+                  class="form-control"
+                  placeholder="請輸入說明內容"
+                  v-model.trim="product.content"
+                >
+                </textarea>
+              </div>
+              <div class="form-group">
+                <div class="form-check">
+                  <input
+                    id="is_enabled"
+                    class="form-check-input"
+                    type="checkbox"
+                    :true-value="1"
+                    :false-value="0"
+                    v-model="product.is_enabled"
+                  />
+                  <label class="form-check-label" for="is_enabled"
+                    >是否啟用</label
+                  >
                 </div>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              data-bs-dismiss="modal"
-              @click="isClickSendBtn = 0"
-            >
-              取消
-            </button>
-            <button type="submit" class="btn btn-primary">確認</button>
-          </div>
-        </Form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
+            @click="isClickSendBtn = 0"
+          >
+            取消
+          </button>
+          <button type="button" class="btn btn-primary" @click="editProduct">
+            確認
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -253,33 +259,21 @@ export default {
   watch: {
     // Eslint 較嚴格，即便是改物件屬性，也不能改 root component 傳建來的 props，故用 watch 接到自己的 data 裡面
     tempProduct () {
-      console.log('tempProduct watch')
-      // 一但 vee-validate 啟動，就不能在動有綁定 validate 的屬性，否則會有 Error: Cannot convert a Symbol value to a string（因 vee-validate 是基於屬性去驗證的）
-      // this.product = { ...this.tempProduct }
-      console.log('tempProduct')
-      console.log(this.tempProduct)
-
-      // reset
-      Object.keys(this.product).forEach(key => {
-        this.product[key] = ''
-        if (key === 'imagesUrl') this.product[key] = []
-      })
-
-      // give value
-      Object.keys(this.tempProduct).forEach(key => {
-        this.product[key] = this.tempProduct[key]
-      })
-      console.log('product')
-      console.log(this.product)
-
-      // if (this.product.imagesUrl === undefined) this.product.imagesUrl = []
+      this.product = { ...this.tempProduct }
+      // if (this.action === 'add') {
+      //   this.product = { imagesUrl: [] }
+      // } else if (this.action === 'edit' && this.product.id) {
+      //   // 要用 API get data >> 不用，傳來的 product 物件就是詳細資料了
+      //   console.log(this.product)
+      //   // this.product = { ...this.products.find(product => product.id === this.product.id) }
+      //   // this.product.id = id
+      //   if (this.product.imagesUrl === undefined) this.product.imagesUrl = []
+      // }
+      // this.product.num = 1 // html 裡面沒數量，先填 1
     }
   },
   methods: {
     openModal () {
-      console.log('openModal')
-      // this.$refs['product-form'].resetForm()
-      // console.log(this.product)
       this.modal.show()
     },
 
