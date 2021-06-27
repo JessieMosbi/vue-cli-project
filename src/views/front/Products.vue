@@ -53,10 +53,7 @@
 
   <pagination
     class="mt-4"
-    :total-pages="page.total"
-    :current-page="page.current"
-    :has-pre-page="page.hasPre"
-    :has-next-page="page.hasNext"
+    :pagination="page"
     @change-page="getProducts"
   ></pagination>
 </template>

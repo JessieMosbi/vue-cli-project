@@ -46,13 +46,7 @@
       </tr>
     </tbody>
   </table>
-  <pagination
-    :total-pages="page.total"
-    :current-page="page.current"
-    :has-pre-page="page.hasPre"
-    :has-next-page="page.hasNext"
-    @change-page="getData"
-  ></pagination>
+  <pagination :pagination="page" @change-page="getData"></pagination>
 
   <product-modal
     ref="productModal"
