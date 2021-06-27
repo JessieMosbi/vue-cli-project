@@ -51,25 +51,25 @@ export default {
   data () {
     return {
       modal: null,
-      coupon: {},
+      coupon: {}
       // loading
-      isLoading: false,
-      loader: null
+      // isLoading: false,
+      // loader: null
     }
   },
   mounted () {
     this.modal = new Modal(this.$refs.modal, null)
   },
   watch: {
-    isLoading (status) {
-      if (status) {
-        this.loader = this.$loading.show({
-          container: null
-        })
-        return
-      }
-      if (this.loader) this.loader.hide()
-    },
+    // isLoading (status) {
+    //   if (status) {
+    //     this.loader = this.$loading.show({
+    //       container: null
+    //     })
+    //     return
+    //   }
+    //   if (this.loader) this.loader.hide()
+    // },
     tempCoupon () {
       this.coupon = { ...this.tempCoupon }
       console.log(this.coupon)
@@ -81,18 +81,18 @@ export default {
     },
 
     deleteCoupon () {
-      this.isLoading = true
+      this.$emitter.emit('loading', true)
 
       this.$http.delete(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupon/${this.tempCoupon.id}`)
         .then(res => {
           console.log(res.data)
           if (!res.data.success) {
             this.$toastMsg('刪除優惠券失敗！')
-            this.isLoading = false
+            this.$emitter.emit('loading', false)
             return
           }
           this.$toastMsg('成功刪除優惠券！', 'success')
-          this.isLoading = false
+          this.$emitter.emit('loading', false)
 
           this.modal.hide()
           this.$emit('updateData')

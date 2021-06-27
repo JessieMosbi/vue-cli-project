@@ -154,25 +154,25 @@ export default {
       modal: null,
       temp: {
         is_paid: false
-      },
+      }
       // loading
-      isLoading: false,
-      loader: null
+      // isLoading: false,
+      // loader: null
     }
   },
   mounted () {
     this.modal = new Modal(this.$refs.orderModal, null)
   },
   watch: {
-    isLoading (status) {
-      if (status) {
-        this.loader = this.$loading.show({
-          container: null
-        })
-        return
-      }
-      if (this.loader) this.loader.hide()
-    },
+    // isLoading (status) {
+    //   if (status) {
+    //     this.loader = this.$loading.show({
+    //       container: null
+    //     })
+    //     return
+    //   }
+    //   if (this.loader) this.loader.hide()
+    // },
     tempOrder () {
       this.order = this.tempOrder
       // openModal 比 watch 更早觸發？
@@ -195,7 +195,7 @@ export default {
     },
 
     updateOrder () {
-      this.isLoading = true
+      this.$emitter.emit('loading', true)
 
       const data = {
         data: {
@@ -209,11 +209,11 @@ export default {
           console.log(res.data)
           if (!res.data.success) {
             this.$toastMsg('訂單更新失敗！')
-            this.isLoading = false
+            this.$emitter.emit('loading', false)
             return
           }
           this.$toastMsg('訂單更新成功！', 'success')
-          this.isLoading = false
+          this.$emitter.emit('loading', false)
 
           this.modal.hide()
           this.$emit('updateData', this.listPage) // 讓 list 停留在同一頁

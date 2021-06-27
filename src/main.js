@@ -17,6 +17,7 @@ import VueLoading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 
 // Other
+import mitt from 'mitt'
 import { currency, formatDate } from '@/assets/transfer.js'
 import { toastMsg } from '@/assets/toast.js'
 
@@ -44,5 +45,6 @@ app.component('ErrorMessage', ErrorMessage)
 app.config.globalProperties.currency = currency
 app.config.globalProperties.$formatDate = formatDate
 app.config.globalProperties.$toastMsg = toastMsg
+app.config.globalProperties.$emitter = mitt()
 
 app.mount('#app')

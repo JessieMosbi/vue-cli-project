@@ -142,22 +142,22 @@ export default {
     return {
       isClickSendBtn: 0,
       modal: null,
-      coupon: { is_enabled: 0 },
+      coupon: { is_enabled: 0 }
       // loading
-      isLoading: false,
-      loader: null
+      // isLoading: false,
+      // loader: null
     }
   },
   watch: {
-    isLoading (status) {
-      if (status) {
-        this.loader = this.$loading.show({
-          container: null
-        })
-        return
-      }
-      if (this.loader) this.loader.hide()
-    },
+    // isLoading (status) {
+    //   if (status) {
+    //     this.loader = this.$loading.show({
+    //       container: null
+    //     })
+    //     return
+    //   }
+    //   if (this.loader) this.loader.hide()
+    // },
     tempCoupon () {
       // input type date format: yyyy-mm-dd
       this.coupon = { ...this.tempCoupon }
@@ -184,11 +184,10 @@ export default {
 
       if (!this.coupon.title || !this.coupon.percent || !this.coupon.due_date || !this.coupon.code) {
         this.$toastMsg('請檢查必填欄位！', 'warning')
-        this.isLoading = false
         return
       }
 
-      this.isLoading = true
+      this.$emitter.emit('loading', true)
 
       const temp = { ...this.coupon }
       temp.due_date = (new Date(temp.due_date).getTime()) / 1000
@@ -219,11 +218,11 @@ export default {
           console.log(res.data)
           if (!res.data.success) {
             this.$toastMsg(`${actionName}失敗！`)
-            this.isLoading = false
+            this.$emitter.emit('loading', false)
             return
           }
           this.$toastMsg(`${actionName}成功！`, 'success')
-          this.isLoading = false
+          this.$emitter.emit('loading', false)
 
           this.modal.hide()
           this.$emit('updateData', this.listPage)

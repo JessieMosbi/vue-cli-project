@@ -87,10 +87,10 @@ export default {
       tempProduct: {
         imagesUrl: []
       },
-      nowAction: '',
+      nowAction: ''
       // loading
-      isLoading: false,
-      loader: null
+      // isLoading: false,
+      // loader: null
     }
   },
   components: {
@@ -101,26 +101,26 @@ export default {
   mounted () {
     this.getData()
   },
-  watch: {
-    isLoading (status) {
-      if (status) {
-        this.loader = this.$loading.show({
-          container: null
-        })
-        return
-      }
-      if (this.loader) this.loader.hide()
-    }
-  },
+  // watch: {
+  //   isLoading (status) {
+  //     if (status) {
+  //       this.loader = this.$loading.show({
+  //         container: null
+  //       })
+  //       return
+  //     }
+  //     if (this.loader) this.loader.hide()
+  //   }
+  // },
   methods: {
     getData (page = 1) {
-      this.isLoading = true
+      this.$emitter.emit('loading', true)
 
       this.$http.get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`)
         .then(res => {
           if (!res.data.success) {
             this.$toastMsg('獲取產品列表資料失敗！')
-            this.isLoading = false
+            this.$emitter.emit('loading', false)
             return
           }
 
@@ -129,7 +129,7 @@ export default {
           this.page.current = res.data.pagination.current_page
           this.page.hasPre = res.data.pagination.has_pre
           this.page.hasNext = res.data.pagination.has_next
-          this.isLoading = false
+          this.$emitter.emit('loading', false)
         })
         .catch(err => console.dir(err))
     },

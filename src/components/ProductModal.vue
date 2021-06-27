@@ -268,10 +268,10 @@ export default {
     return {
       isClickSendBtn: 0,
       modal: null,
-      product: { imagesUrl: [] }, // 這裡要預設給 array，否則會有 Error: can't read property length of null
+      product: { imagesUrl: [] } // 這裡要預設給 array，否則會有 Error: can't read property length of null
       // loading
-      isLoading: false,
-      loader: null
+      // isLoading: false,
+      // loader: null
     }
   },
   mounted () {
@@ -281,15 +281,15 @@ export default {
     this.modal = new Modal(this.$refs.productModal, null)
   },
   watch: {
-    isLoading (status) {
-      if (status) {
-        this.loader = this.$loading.show({
-          container: null
-        })
-        return
-      }
-      if (this.loader) this.loader.hide()
-    },
+    // isLoading (status) {
+    //   if (status) {
+    //     this.loader = this.$loading.show({
+    //       container: null
+    //     })
+    //     return
+    //   }
+    //   if (this.loader) this.loader.hide()
+    // },
     // Eslint 較嚴格，即便是改物件屬性，也不能改 root component 傳建來的 props，故用 watch 接到自己的 data 裡面
     tempProduct () {
       this.product = { ...this.tempProduct }
@@ -323,17 +323,17 @@ export default {
         method = 'put'
       }
 
-      this.isLoading = true
+      this.$emitter.emit('loading', true)
 
       this.$http[method](path, data)
         .then(res => {
           if (!res.data.success) {
             this.$toastMsg(`${actionName}失敗！`)
-            this.isLoading = false
+            this.$emitter.emit('loading', false)
             return
           }
           this.$toastMsg(`${actionName}成功`, 'success')
-          this.isLoading = false
+          this.$emitter.emit('loading', false)
 
           this.modal.hide()
           this.$emit('updateData')
@@ -355,7 +355,7 @@ export default {
 
     // 先呼叫上傳圖片 API 後，會回傳圖片位址，新增/編輯 product 再將 url 傳上去
     uploadFile (type) {
-      this.isLoading = true
+      this.$emitter.emit('loading', true)
 
       console.log(type)
       console.dir(this.$refs)
@@ -369,14 +369,14 @@ export default {
         .then(res => {
           if (!res.data.success) {
             this.$toastMsg('檔案上傳失敗！')
-            this.isLoading = false
+            this.$emitter.emit('loading', false)
             return
           }
           console.log(res.data.imageUrl)
           if (type === 'imageUrl') this.product.imageUrl = res.data.imageUrl
           else this.product.imagesUrl[type.split('-')[1]] = res.data.imageUrl
 
-          this.isLoading = false
+          this.$emitter.emit('loading', false)
         })
         .catch(err => console.dir(err))
     }
