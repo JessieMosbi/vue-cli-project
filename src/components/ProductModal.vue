@@ -95,7 +95,9 @@
               </div>
               <div class="col-sm-8">
                 <div class="form-group">
-                  <label for="title">標題</label>
+                  <label for="title"
+                    ><span class="text-danger">*</span> 標題</label
+                  >
                   <input
                     id="title"
                     type="text"
@@ -114,7 +116,9 @@
 
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="category">分類</label>
+                    <label for="category"
+                      ><span class="text-danger">*</span> 分類</label
+                    >
                     <input
                       id="category"
                       type="text"
@@ -131,7 +135,9 @@
                     </div>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="unit">單位</label>
+                    <label for="unit"
+                      ><span class="text-danger">*</span> 單位</label
+                    >
                     <input
                       id="unit"
                       type="text"
@@ -151,7 +157,9 @@
 
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="origin_price">原價</label>
+                    <label for="origin_price"
+                      ><span class="text-danger">*</span> 原價</label
+                    >
                     <input
                       id="origin_price"
                       type="number"
@@ -169,7 +177,9 @@
                     </div>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="price">售價</label>
+                    <label for="price"
+                      ><span class="text-danger">*</span> 售價</label
+                    >
                     <input
                       id="price"
                       type="number"

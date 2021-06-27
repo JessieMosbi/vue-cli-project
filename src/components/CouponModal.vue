@@ -13,7 +13,7 @@
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
             <span v-if="!coupon.id">新增優惠卷</span>
-            <span v-else>編輯優惠卷</span>
+            <span v-else>編輯優惠卷</span> {{ isClickSendBtn }}
           </h5>
           <button
             type="button"
@@ -25,7 +25,7 @@
         <div class="modal-body">
           {{ coupon }}
           <div class="mb-3">
-            <label for="title">標題</label>
+            <label for="title"><span class="text-danger">*</span> 標題</label>
             <input
               type="text"
               class="form-control"
@@ -33,9 +33,18 @@
               v-model="coupon.title"
               placeholder="請輸入標題"
             />
+            <div
+              class="invalid-feedback"
+              :class="{ 'd-block': !coupon.title }"
+              v-if="isClickSendBtn"
+            >
+              標題為必填
+            </div>
           </div>
           <div class="mb-3">
-            <label for="coupon_code">優惠碼</label>
+            <label for="coupon_code"
+              ><span class="text-danger">*</span> 優惠碼</label
+            >
             <input
               type="text"
               class="form-control"
@@ -43,18 +52,36 @@
               v-model="coupon.code"
               placeholder="請輸入優惠碼"
             />
+            <div
+              class="invalid-feedback"
+              :class="{ 'd-block': !coupon.code }"
+              v-if="isClickSendBtn"
+            >
+              優惠碼為必填
+            </div>
           </div>
           <div class="mb-3">
-            <label for="due_date">到期日</label>
+            <label for="due_date"
+              ><span class="text-danger">*</span> 到期日</label
+            >
             <input
               type="date"
               class="form-control"
               id="due_date"
               v-model="coupon.due_date"
             />
+            <div
+              class="invalid-feedback"
+              :class="{ 'd-block': !coupon.due_date }"
+              v-if="isClickSendBtn"
+            >
+              到期日為必填
+            </div>
           </div>
           <div class="mb-3">
-            <label for="price">折扣百分比</label>
+            <label for="price"
+              ><span class="text-danger">*</span> 折扣百分比</label
+            >
             <input
               type="number"
               class="form-control"
@@ -63,6 +90,13 @@
               v-model="coupon.percent"
               placeholder="請輸入折扣百分比"
             />
+            <div
+              class="invalid-feedback"
+              :class="{ 'd-block': !coupon.percent }"
+              v-if="isClickSendBtn"
+            >
+              折扣百分比為必填
+            </div>
           </div>
           <div class="mb-3">
             <div class="form-check">
@@ -106,6 +140,7 @@ export default {
   props: ['tempCoupon', 'action', 'listPage'],
   data () {
     return {
+      isClickSendBtn: 0,
       modal: null,
       coupon: { is_enabled: 0 },
       // loading
@@ -145,13 +180,15 @@ export default {
     },
 
     editCoupon () {
-      this.isLoading = true
+      this.isClickSendBtn = 1
 
       if (!this.coupon.title || !this.coupon.percent || !this.coupon.due_date || !this.coupon.code) {
         this.$toastMsg('請檢查必填欄位！', 'warning')
         this.isLoading = false
         return
       }
+
+      this.isLoading = true
 
       const temp = { ...this.coupon }
       temp.due_date = (new Date(temp.due_date).getTime()) / 1000
@@ -190,6 +227,7 @@ export default {
 
           this.modal.hide()
           this.$emit('updateData', this.listPage)
+          this.isClickSendBtn = 0
         })
         .catch(err => console.dir(err))
     }
