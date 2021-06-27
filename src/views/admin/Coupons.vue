@@ -18,7 +18,7 @@
       <tr v-for="coupon in coupons" :key="coupon.id">
         <td>{{ coupon.title }}</td>
         <td>{{ coupon.percent }}</td>
-        <td>{{ this.date(coupon.due_date) }}</td>
+        <td>{{ this.$formatDate(coupon.due_date, "YYYY/MM/DD") }}</td>
         <td>
           <span class="text-success" v-if="coupon.is_enabled">啟用</span>
           <span class="text-muted" v-else>未啟用</span>

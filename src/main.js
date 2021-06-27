@@ -17,7 +17,7 @@ import VueLoading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 
 // Other
-import { currency, date } from '@/assets/transfer.js'
+import { currency, formatDate } from '@/assets/transfer.js'
 
 // vee-validate setting
 defineRule('required', required)
@@ -41,6 +41,6 @@ app.component('ErrorMessage', ErrorMessage)
 
 // global properties
 app.config.globalProperties.currency = currency
-app.config.globalProperties.date = date
+app.config.globalProperties.$formatDate = formatDate
 
 app.mount('#app')

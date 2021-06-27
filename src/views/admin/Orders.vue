@@ -13,7 +13,9 @@
     </thead>
     <tbody>
       <tr v-for="order in orders" :key="order.id">
-        <td>{{ date(order.create_at) }}</td>
+        <td>
+          {{ $formatDate(order.create_at, "YYYY/MM/DD") }}
+        </td>
         <td>{{ order.id }}</td>
         <td>{{ order.user.name }}</td>
         <td>{{ order.user.email }}</td>

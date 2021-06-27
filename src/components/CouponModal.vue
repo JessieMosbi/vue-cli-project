@@ -128,10 +128,7 @@ export default {
       this.coupon = { ...this.tempCoupon }
 
       if (this.action === 'edit') {
-        const tempTime = new Date(this.tempCoupon.due_date * 1000)
-        const mm = tempTime.getMonth() + 1
-        const dd = tempTime.getDate()
-        this.coupon.due_date = [tempTime.getFullYear(), (mm < 10 ? '0' + mm : mm), (dd < 10 ? '0' + dd : dd)].join('-')
+        this.coupon.due_date = this.$formatDate(this.tempCoupon.due_date, 'YYYY-MM-DD')
       }
       console.log('CouponsOmdal.vue watch')
       console.log(this.coupon)
