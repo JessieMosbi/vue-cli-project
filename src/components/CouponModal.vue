@@ -148,7 +148,7 @@ export default {
       this.isLoading = true
 
       if (!this.coupon.title || !this.coupon.percent || !this.coupon.due_date || !this.coupon.code) {
-        alert('請檢查必填欄位！')
+        this.$toastMsg('請檢查必填欄位！', 'warning')
         this.isLoading = false
         return
       }
@@ -181,11 +181,11 @@ export default {
         .then(res => {
           console.log(res.data)
           if (!res.data.success) {
-            alert(`${actionName}失敗！`)
+            this.$toastMsg(`${actionName}失敗！`)
             this.isLoading = false
             return
           }
-          alert(`${actionName}成功！`)
+          this.$toastMsg(`${actionName}成功！`, 'success')
           this.isLoading = false
 
           this.modal.hide()

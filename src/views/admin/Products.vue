@@ -119,7 +119,7 @@ export default {
       this.$http.get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`)
         .then(res => {
           if (!res.data.success) {
-            alert('獲取產品列表資料失敗！')
+            this.$toastMsg('獲取產品列表資料失敗！')
             this.isLoading = false
             return
           }

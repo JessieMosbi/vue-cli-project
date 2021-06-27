@@ -119,7 +119,7 @@ export default {
           console.log(res.data)
 
           if (!res.data.success) {
-            alert('獲取產品列表資料失敗！')
+            this.$toastMsg('獲取產品列表資料失敗！')
             this.isLoading = false
             return
           }

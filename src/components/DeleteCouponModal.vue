@@ -87,11 +87,11 @@ export default {
         .then(res => {
           console.log(res.data)
           if (!res.data.success) {
-            alert('刪除優惠券失敗！')
+            this.$toastMsg('刪除優惠券失敗！')
             this.isLoading = false
             return
           }
-          alert('成功刪除優惠券！')
+          this.$toastMsg('成功刪除優惠券！', 'success')
           this.isLoading = false
 
           this.modal.hide()

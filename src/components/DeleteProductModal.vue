@@ -51,13 +51,25 @@ export default {
   data () {
     return {
       modal: null,
-      product: {}
+      product: {},
+      // loading
+      isLoading: false,
+      loader: null
     }
   },
   mounted () {
     this.modal = new Modal(this.$refs.delProductModal, null)
   },
   watch: {
+    isLoading (status) {
+      if (status) {
+        this.loader = this.$loading.show({
+          container: null
+        })
+        return
+      }
+      if (this.loader) this.loader.hide()
+    },
     tempProduct () {
       this.product = { ...this.tempProduct }
     }
@@ -68,14 +80,17 @@ export default {
     },
 
     deleteProduct () {
+      this.isLoading = true
+
       this.$http.delete(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product/${this.tempProduct.id}`)
         .then(res => {
           if (!res.data.success) {
-            alert('刪除產品失敗！')
+            this.$toastMsg('刪除產品失敗！')
+            this.isLoading = false
             return
           }
-          alert('成功刪除產品！')
-
+          this.isLoading = false
+          this.$toastMsg('成功刪除產品！', 'success')
           this.modal.hide()
           this.$emit('updateData')
         })

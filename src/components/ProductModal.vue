@@ -295,7 +295,7 @@ export default {
       this.isClickSendBtn = 1
 
       if (!this.product.title || !this.product.category || !this.product.unit || !this.product.origin_price || !this.product.price) {
-        alert('請檢查必填欄位！')
+        this.$toastMsg('請檢查必填欄位', 'warning')
         return
       }
 
@@ -318,11 +318,11 @@ export default {
       this.$http[method](path, data)
         .then(res => {
           if (!res.data.success) {
-            alert(`${actionName}失敗！`)
+            this.$toastMsg(`${actionName}失敗！`)
             this.isLoading = false
             return
           }
-          alert(`${actionName}成功！`)
+          this.$toastMsg(`${actionName}成功`, 'success')
           this.isLoading = false
 
           this.modal.hide()
@@ -358,7 +358,7 @@ export default {
       this.$http.post(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/upload`, formData)
         .then(res => {
           if (!res.data.success) {
-            alert('檔案上傳失敗！')
+            this.$toastMsg('檔案上傳失敗！')
             this.isLoading = false
             return
           }

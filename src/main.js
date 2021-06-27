@@ -18,6 +18,7 @@ import 'vue-loading-overlay/dist/vue-loading.css'
 
 // Other
 import { currency, formatDate } from '@/assets/transfer.js'
+import { toastMsg } from '@/assets/toast.js'
 
 // vee-validate setting
 defineRule('required', required)
@@ -42,5 +43,6 @@ app.component('ErrorMessage', ErrorMessage)
 // global properties
 app.config.globalProperties.currency = currency
 app.config.globalProperties.$formatDate = formatDate
+app.config.globalProperties.$toastMsg = toastMsg
 
 app.mount('#app')

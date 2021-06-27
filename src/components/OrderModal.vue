@@ -208,11 +208,11 @@ export default {
         .then(res => {
           console.log(res.data)
           if (!res.data.success) {
-            alert('訂單更新失敗！')
+            this.$toastMsg('訂單更新失敗！')
             this.isLoading = false
             return
           }
-          alert('訂單更新成功！')
+          this.$toastMsg('訂單更新成功！', 'success')
           this.isLoading = false
 
           this.modal.hide()
