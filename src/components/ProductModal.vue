@@ -269,9 +269,6 @@ export default {
       isClickSendBtn: 0,
       modal: null,
       product: { imagesUrl: [] } // 這裡要預設給 array，否則會有 Error: can't read property length of null
-      // loading
-      // isLoading: false,
-      // loader: null
     }
   },
   mounted () {
@@ -281,15 +278,6 @@ export default {
     this.modal = new Modal(this.$refs.productModal, null)
   },
   watch: {
-    // isLoading (status) {
-    //   if (status) {
-    //     this.loader = this.$loading.show({
-    //       container: null
-    //     })
-    //     return
-    //   }
-    //   if (this.loader) this.loader.hide()
-    // },
     // Eslint 較嚴格，即便是改物件屬性，也不能改 root component 傳建來的 props，故用 watch 接到自己的 data 裡面
     tempProduct () {
       this.product = { ...this.tempProduct }
@@ -357,11 +345,6 @@ export default {
     uploadFile (type) {
       this.$emitter.emit('loading', true)
 
-      console.log(type)
-      console.dir(this.$refs)
-      console.dir(this.$refs[type].files[1])
-      console.log(`index: ${type.split('-')[1]}`)
-
       const formData = new FormData()
       formData.append('file-to-upload', this.$refs[type].files[0])
 
@@ -372,7 +355,7 @@ export default {
             this.$emitter.emit('loading', false)
             return
           }
-          console.log(res.data.imageUrl)
+
           if (type === 'imageUrl') this.product.imageUrl = res.data.imageUrl
           else this.product.imagesUrl[type.split('-')[1]] = res.data.imageUrl
 

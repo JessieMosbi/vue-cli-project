@@ -82,9 +82,6 @@ export default {
         imagesUrl: []
       },
       nowAction: ''
-      // loading
-      // isLoading: false,
-      // loader: null
     }
   },
   components: {
@@ -95,17 +92,6 @@ export default {
   mounted () {
     this.getData()
   },
-  // watch: {
-  //   isLoading (status) {
-  //     if (status) {
-  //       this.loader = this.$loading.show({
-  //         container: null
-  //       })
-  //       return
-  //     }
-  //     if (this.loader) this.loader.hide()
-  //   }
-  // },
   methods: {
     getData (page = 1) {
       this.$emitter.emit('loading', true)

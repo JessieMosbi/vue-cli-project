@@ -52,24 +52,12 @@ export default {
     return {
       modal: null,
       product: {}
-      // loading
-      // isLoading: false,
-      // loader: null
     }
   },
   mounted () {
     this.modal = new Modal(this.$refs.delProductModal, null)
   },
   watch: {
-    // isLoading (status) {
-    //   if (status) {
-    //     this.loader = this.$loading.show({
-    //       container: null
-    //     })
-    //     return
-    //   }
-    //   if (this.loader) this.loader.hide()
-    // },
     tempProduct () {
       this.product = { ...this.tempProduct }
     }

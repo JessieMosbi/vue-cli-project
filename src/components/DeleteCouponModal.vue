@@ -52,27 +52,14 @@ export default {
     return {
       modal: null,
       coupon: {}
-      // loading
-      // isLoading: false,
-      // loader: null
     }
   },
   mounted () {
     this.modal = new Modal(this.$refs.modal, null)
   },
   watch: {
-    // isLoading (status) {
-    //   if (status) {
-    //     this.loader = this.$loading.show({
-    //       container: null
-    //     })
-    //     return
-    //   }
-    //   if (this.loader) this.loader.hide()
-    // },
     tempCoupon () {
       this.coupon = { ...this.tempCoupon }
-      console.log(this.coupon)
     }
   },
   methods: {
@@ -85,7 +72,6 @@ export default {
 
       this.$http.delete(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupon/${this.tempCoupon.id}`)
         .then(res => {
-          console.log(res.data)
           if (!res.data.success) {
             this.$toastMsg('刪除優惠券失敗！')
             this.$emitter.emit('loading', false)

@@ -53,24 +53,12 @@ export default {
     return {
       modal: null,
       order: {}
-      // loading
-      // isLoading: false,
-      // loader: null
     }
   },
   mounted () {
     this.modal = new Modal(this.$refs.modal, null)
   },
   watch: {
-    // isLoading (status) {
-    //   if (status) {
-    //     this.loader = this.$loading.show({
-    //       container: null
-    //     })
-    //     return
-    //   }
-    //   if (this.loader) this.loader.hide()
-    // },
     tempOrder () {
       this.order = { ...this.tempOrder }
     }
@@ -81,13 +69,10 @@ export default {
     },
 
     deleteOrder () {
-      console.log(`deleteOrder: ${this.order.id}`)
-
       this.$emitter.emit('loading', true)
 
       this.$http.delete(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.order.id}`)
         .then(res => {
-          console.log(res.data)
           if (!res.data.success) {
             this.$toastMsg('訂單刪除失敗！')
             this.$emitter.emit('loading', false)

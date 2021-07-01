@@ -23,7 +23,6 @@
           ></button>
         </div>
         <div class="modal-body">
-          {{ coupon }}
           <div class="mb-3">
             <label for="title"><span class="text-danger">*</span> 標題</label>
             <input
@@ -143,21 +142,9 @@ export default {
       isClickSendBtn: 0,
       modal: null,
       coupon: { is_enabled: 0 }
-      // loading
-      // isLoading: false,
-      // loader: null
     }
   },
   watch: {
-    // isLoading (status) {
-    //   if (status) {
-    //     this.loader = this.$loading.show({
-    //       container: null
-    //     })
-    //     return
-    //   }
-    //   if (this.loader) this.loader.hide()
-    // },
     tempCoupon () {
       // input type date format: yyyy-mm-dd
       this.coupon = { ...this.tempCoupon }
@@ -165,8 +152,6 @@ export default {
       if (this.action === 'edit') {
         this.coupon.due_date = this.$formatDate(this.tempCoupon.due_date, 'YYYY-MM-DD')
       }
-      console.log('CouponsOmdal.vue watch')
-      console.log(this.coupon)
     }
   },
   mounted () {
@@ -174,8 +159,6 @@ export default {
   },
   methods: {
     openModal () {
-      console.log('CouponsOmdal.vue openModal')
-      console.log(this.tempCoupon)
       this.modal.show()
     },
 
@@ -194,11 +177,6 @@ export default {
       temp.percent = +(temp.percent)
       temp.is_enabled = +(temp.is_enabled)
 
-      console.log(temp)
-
-      // const tempUnix = (new Date(this.coupon.due_date).getTime()) / 1000
-      // console.log(this.date(tempUnix))
-
       let actionName = ''
       let path = ''
       let method = ''
@@ -215,7 +193,6 @@ export default {
 
       this.$http[method](path, data)
         .then(res => {
-          console.log(res.data)
           if (!res.data.success) {
             this.$toastMsg(`${actionName}失敗！`)
             this.$emitter.emit('loading', false)

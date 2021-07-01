@@ -79,9 +79,6 @@ export default {
       },
       tempOrder: {},
       nowAction: ''
-      // loading
-      // isLoading: false,
-      // loader: null
     }
   },
   components: {
@@ -92,26 +89,12 @@ export default {
   mounted () {
     this.getData()
   },
-  // watch: {
-  //   isLoading (status) {
-  //     if (status) {
-  //       this.loader = this.$loading.show({
-  //         container: null
-  //       })
-  //       return
-  //     }
-  //     if (this.loader) this.loader.hide()
-  //   }
-  // },
   methods: {
     getData (page = 1) {
-      console.log(`page is ${page}`)
       this.$emitter.emit('loading', true)
 
       this.$http.get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/orders?page=${page}`)
         .then(res => {
-          console.log(res.data)
-
           if (!res.data.success) {
             this.$toastMsg('獲取產品列表資料失敗！')
             this.$emitter.emit('loading', false)
@@ -129,7 +112,6 @@ export default {
     },
 
     openModal (action, orderId) {
-      console.log(action, orderId)
       this.tempOrder = this.orders.find(order => order.id === orderId)
 
       if (action === 'check') {

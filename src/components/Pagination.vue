@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ pagination }}
     <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li
@@ -38,7 +37,6 @@
 
 <script>
 export default {
-  // props: ['totalPages', 'currentPage', 'hasPrePage', 'hasNextPage'],
   props: ['pagination'],
   methods: {
     clickPage (page) {

@@ -22,7 +22,6 @@
           ></button>
         </div>
         <div class="modal-body">
-          {{ temp.is_paid }}
           <div class="row">
             <div class="col-md-4">
               <h3>用戶資料</h3>
@@ -155,42 +154,19 @@ export default {
       temp: {
         is_paid: false
       }
-      // loading
-      // isLoading: false,
-      // loader: null
     }
   },
   mounted () {
     this.modal = new Modal(this.$refs.orderModal, null)
   },
   watch: {
-    // isLoading (status) {
-    //   if (status) {
-    //     this.loader = this.$loading.show({
-    //       container: null
-    //     })
-    //     return
-    //   }
-    //   if (this.loader) this.loader.hide()
-    // },
     tempOrder () {
       this.order = this.tempOrder
-      // openModal 比 watch 更早觸發？
-      console.log('watch')
-      console.log(this.order)
-      // console.log(Object.keys(this.order.products))
-      // Object.keys(this.order.products).forEach(productId => {
-      //   console.log(this.order.products[productId].product.title)
-      //   // console.log(this.order.products[productId].title)
-      // })
       this.temp.is_paid = this.order.is_paid
-      console.log(this.temp.is_paid)
     }
   },
   methods: {
     openModal () {
-      console.log('openModal')
-      console.log(this.order)
       this.modal.show()
     },
 
@@ -206,7 +182,6 @@ export default {
 
       this.$http.put(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.order.id}`, data)
         .then(res => {
-          console.log(res.data)
           if (!res.data.success) {
             this.$toastMsg('訂單更新失敗！')
             this.$emitter.emit('loading', false)

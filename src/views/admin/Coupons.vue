@@ -80,9 +80,6 @@ export default {
       },
       tempCoupon: {},
       nowAction: ''
-      // loading
-      // isLoading: false,
-      // loader: null
     }
   },
   components: {
@@ -93,25 +90,12 @@ export default {
   mounted () {
     this.getData()
   },
-  // watch: {
-  //   isLoading (status) {
-  //     if (status) {
-  //       this.loader = this.$loading.show({
-  //         container: null
-  //       })
-  //       return
-  //     }
-  //     if (this.loader) this.loader.hide()
-  //   }
-  // },
   methods: {
     getData (page = 1) {
       this.$emitter.emit('loading', true)
 
       this.$http.get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupons?page=${page}`)
         .then(res => {
-          console.log(res.data)
-
           if (!res.data.success) {
             this.$toastMsg('獲取優惠券列表資料失敗！')
             this.$emitter.emit('loading', false)
@@ -134,8 +118,6 @@ export default {
         this.tempCoupon = { is_enabled: 0 }
       } else if ((action === 'edit' || action === 'delete') && id) {
         this.tempCoupon = { ...this.coupons.find(coupon => coupon.id === id) }
-        console.log('Coupons.vue')
-        console.log(this.tempCoupon)
       }
 
       if (action === 'add' || action === 'edit') this.$refs.couponModal.openModal()
