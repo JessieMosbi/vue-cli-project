@@ -44,9 +44,6 @@
 </template>
 
 <script>
-
-import * as api from '@/assets/adminApi.js'
-
 export default {
   // 若設 mounted，則包含子元件的 DOM 都要 ready 才會執行
   // 我在子元件的 mounted 有用 axios，這樣會導致子元件 mounted 先執行，才換母元件的 mounted 執行 > 導致取不到 token
@@ -57,9 +54,6 @@ export default {
       this.$router.replace('/login')
     }
     this.$http.defaults.headers.common.Authorization = token
-
-    // api.default.getProducts()
-    api.getProducts()
   }
 }
 </script>
