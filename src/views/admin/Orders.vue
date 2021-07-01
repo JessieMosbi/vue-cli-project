@@ -117,7 +117,7 @@ export default {
       if (action === 'check') {
         // FIXME:
         // 如果不加這一行的話，openModal 會比 watch 更早觸發
-        // 看了一下網路上的解釋：應該是 Vue 偵測到值改變後，會重新進行渲染，nextTick 就是等他重新渲染玩一次後所執行的 callback，但還是不是很懂
+        // 看了一下網路上的解釋：應該是 Vue 偵測到值改變後，會重新進行渲染，nextTick 就是等他重新渲染玩一次後所執行的 callback，不知道有沒有理解錯誤？所以只要有多個值改變，Vue 就會執行多次，就必須要包非常多層 nextTick 嗎？
         // 不過即使 orderModal.openModal 比 orderModal.tempOrder 更早觸發，也不會影響到 orderModal template 的值，想請問原因？
 
         // this.$nextTick(() => {
